@@ -63,7 +63,7 @@ function App() {
             Find <span className="text-gradient">Movies</span> You'll Love
             Without the Hassle
           </h1>
-          <Search debouncedSearchTerm={debouncedSearchTerm} updateQuery={updateQuery} />
+          <Search query={query.query} updateQuery={updateQuery} />
         </header>
 
         {trendingMovies.length > 0 && (
