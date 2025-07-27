@@ -20,23 +20,20 @@ function App() {
   useDebounce(
     () => {
       setDebouncedSearchTerm(query.query);
-
     },
     700,
     [query.query]
   );
   const { data, loading, error, setError } =
     useFetchMovies(debouncedSearchTerm);
-  console.log(data);
   useEffect(() => {
     const update = async () => {
-      if (debouncedSearchTerm && data.results.length > 0) {
-        await updateSearchCount(debouncedSearchTerm, data.results[0]);
-        console.log(data.results[0]);
+      if (debouncedSearchTerm && !loading && data.results.length > 0) {
+        updateSearchCount(debouncedSearchTerm, data.results[0]);
       }
     };
     update();
-  }, [debouncedSearchTerm, data]);
+  }, [data]);
 
   const loadTrendingMovies = async () => {
     try {
@@ -61,7 +58,7 @@ function App() {
             Find <span className="text-gradient">Movies</span> You'll Love
             Without the Hassle
           </h1>
-          <Search query={debouncedSearchTerm} updateQuery={updateQuery} />
+          <Search query={query.query} updateQuery={updateQuery} />
         </header>
 
         {trendingMovies.length > 0 && (

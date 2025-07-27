@@ -1,5 +1,5 @@
 
-const Search = ({debouncedSearchTerm, updateQuery}) => {
+const Search = ({query, updateQuery}) => {
 
   const handleSearch = (value) => {
     updateQuery({query: value})
@@ -11,7 +11,7 @@ const Search = ({debouncedSearchTerm, updateQuery}) => {
         <input
           type="text"
           placeholder="Search through thounsands of movies"
-          value={debouncedSearchTerm}
+          value={query}
           onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
