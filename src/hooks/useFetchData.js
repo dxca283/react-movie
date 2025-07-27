@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const useFetchData = (path, queryParams, options) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({ results: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -10,18 +10,19 @@ const useFetchData = (path, queryParams, options) => {
       setLoading(true);
       const queryString = new URLSearchParams(queryParams).toString(); 
       const endpoint = queryString ? `${path}?${queryString}` : path;
+      console.log("Fetching from endpoint:", endpoint);
       try {
         const res = await fetch(endpoint, options);
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
         const data = await res.json();
-        setData(data || []);
+        setData(data || { results: [] });
         setLoading(false);
       } catch (error) {
         console.log("Error fetching data:", error);
         setError("Failed to fetch data. Please try again later.");
-        setData([]);
+        setData({ results: [] });
       } finally {
         setLoading(false);
       }

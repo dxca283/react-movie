@@ -27,7 +27,9 @@ function App() {
   );
   const { data, loading, error, setError } =
     useFetchMovies(debouncedSearchTerm);
-  console.log(data);
+  console.log("Search term:", debouncedSearchTerm);
+  console.log("Data:", data);
+  console.log("Loading:", loading);
   useEffect(() => {
     const update = async () => {
       if (debouncedSearchTerm && data.results.length > 0) {
@@ -61,7 +63,7 @@ function App() {
             Find <span className="text-gradient">Movies</span> You'll Love
             Without the Hassle
           </h1>
-          <Search query={debouncedSearchTerm} updateQuery={updateQuery} />
+          <Search debouncedSearchTerm={debouncedSearchTerm} updateQuery={updateQuery} />
         </header>
 
         {trendingMovies.length > 0 && (

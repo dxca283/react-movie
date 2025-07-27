@@ -11,12 +11,17 @@ const API_OPTIONS = {
 };
 
 const useFetchMovies = (query = "") => {
+  console.log("useFetchMovies called with query:", query);
+  
   const path = query
     ? `${API_BASE_URL}/search/movie`
     : `${API_BASE_URL}/discover/movie`;
 
   const queryParams = query ?  {query}  : { sort_by: "popularity.desc" };
   
+  console.log("API path:", path);
+  console.log("Query params:", queryParams);
+  console.log("API_KEY exists:", !!API_KEY);
   
   return useFetchData(path, queryParams, API_OPTIONS);
 };
