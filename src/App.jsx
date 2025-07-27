@@ -32,9 +32,11 @@ function App() {
   console.log("Loading:", loading);
   useEffect(() => {
     const update = async () => {
-      if (debouncedSearchTerm && data.results.length > 0) {
+      if (debouncedSearchTerm && data.results && data.results.length > 0) {
+        console.log("Updating search count for:", debouncedSearchTerm);
+        console.log("First movie result:", data.results[0]);
         await updateSearchCount(debouncedSearchTerm, data.results[0]);
-        console.log(data.results[0]);
+        console.log("Search count updated successfully");
       }
     };
     update();
