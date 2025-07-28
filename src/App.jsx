@@ -6,6 +6,9 @@ import { updateSearchCount, getTrendingMovies } from "./appwrite.js";
 import Search from "./components/Search.jsx";
 import useFetchMovies from "./hooks/movieAPI.js";
 import useQuery from "./hooks/useQuery.js";
+import usePagination from "./hooks/usePagination.js";
+import Action from "./components/Action.jsx";
+import Movies from "./components/Movies.jsx";
 
 function App() {
   const [query, updateQuery, resetQuery] = useQuery({
@@ -34,7 +37,6 @@ function App() {
     };
     update();
   }, [data]);
-  
 
   const loadTrendingMovies = async () => {
     try {
@@ -48,6 +50,9 @@ function App() {
   useEffect(() => {
     loadTrendingMovies();
   }, []);
+
+  const [totalPages, paginatedData, currentPage, setCurrentPage] = usePagination(data.results, 4);
+
   return (
     <main>
       <div className="pattern" />
@@ -78,21 +83,8 @@ function App() {
           </section>
         )}
 
-        <section className="all-movies">
-          <h2>All movies</h2>
-
-          {loading ? (
-            <Spinner loading={loading} />
-          ) : error ? (
-            <p className="text-red">{error}</p>
-          ) : (
-            <ul>
-              {data.results.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
-              ))}
-            </ul>
-          )}
-        </section>
+        <Movies loading={loading} movieList={paginatedData} error={error} />
+        <Action currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
       </div>
     </main>
   );
