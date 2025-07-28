@@ -11,6 +11,8 @@ const API_OPTIONS = {
 };
 
 const useFetchMovies = (query = "") => {
+  
+
   const path = query
     ? `${API_BASE_URL}/search/movie`
     : `${API_BASE_URL}/discover/movie`;

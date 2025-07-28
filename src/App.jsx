@@ -9,6 +9,9 @@ import useQuery from "./hooks/useQuery.js";
 import usePagination from "./hooks/usePagination.js";
 import Action from "./components/Action.jsx";
 import Movies from "./components/Movies.jsx";
+import Header from "./components/Header.jsx";
+import TrendingMovies from "./components/TrendingMovies.jsx";
+import useTrendingMovies from "./hooks/useTrendingMovies.js";
 
 function App() {
   const [query, updateQuery, resetQuery] = useQuery({
@@ -17,9 +20,6 @@ function App() {
   });
 
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-
-  const [trendingMovies, setTrendingMovies] = useState([]);
-
   useDebounce(
     () => {
       setDebouncedSearchTerm(query.query);
@@ -29,6 +29,7 @@ function App() {
   );
   const { data, loading, error, setError } =
     useFetchMovies(debouncedSearchTerm);
+
   useEffect(() => {
     const update = async () => {
       if (debouncedSearchTerm && !loading && data.results.length > 0) {
@@ -38,53 +39,26 @@ function App() {
     update();
   }, [data]);
 
-  const loadTrendingMovies = async () => {
-    try {
-      const movies = await getTrendingMovies();
-      setTrendingMovies(movies);
-    } catch (error) {
-      setError("Failed to fetch trending movies. Please try again later.");
-    }
-  };
+  const [trendingMovies] = useTrendingMovies();
 
-  useEffect(() => {
-    loadTrendingMovies();
-  }, []);
-
-  const [totalPages, paginatedData, currentPage, setCurrentPage] = usePagination(data.results, 4);
+  const [totalPages, paginatedData, currentPage, setCurrentPage] =
+    usePagination(data.results, 4);
 
   return (
     <main>
       <div className="pattern" />
 
       <div className="wrapper">
-        <header>
-          <img src="/hero.png" alt="hero" />
-          <h1>
-            Find <span className="text-gradient">Movies</span> You'll Love
-            Without the Hassle
-          </h1>
-          <Search query={query.query} updateQuery={updateQuery} />
-        </header>
+        <Header query={query.query} updateQuery={updateQuery} />
 
-        {trendingMovies.length > 0 && (
-          <section className="trending">
-            <h2>Trending</h2>
-            <ul>
-              {trendingMovies.map((movie, index) => {
-                return (
-                  <li key={movie.$id}>
-                    <p>{index + 1}</p>
-                    <img src={movie.poster_url} alt={movie.title} />
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-        )}
+        <TrendingMovies trendingMovies={trendingMovies} />
 
         <Movies loading={loading} movieList={paginatedData} error={error} />
-        <Action currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+        <Action
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+        />
       </div>
     </main>
   );
