@@ -34,6 +34,7 @@ function App() {
     };
     update();
   }, [data]);
+  
 
   const loadTrendingMovies = async () => {
     try {
